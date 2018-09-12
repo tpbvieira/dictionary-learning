@@ -92,6 +92,7 @@ Which_Folder = dir([Training_Set_Folder,'/',cccc(clss+2).name,'/']);
 Which_Image = randsample(3:length(Which_Folder),1);
 Image_Path = [Training_Set_Folder,'/',cccc(clss+2).name,'/',Which_Folder(Which_Image).name];
 Class_Image = (Image_Path);
+Detected_Class = cccc(clss+2).name;
 fprintf('[TestCase01] Testing Image : %s\n', test_image_path);
 fprintf('[TestCase01] Detected Image: %s\n', Class_Image);
 fprintf('[TestCase01] Done!');
@@ -184,6 +185,8 @@ for k=1:length(TestFiles)
         end
     end
 end
+
+
 eta = (IsTrue/TotImg)*100;
 set(handles.edit2,'visible','on');
 set(handles.text4,'visible','on');
