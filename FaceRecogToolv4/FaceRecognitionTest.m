@@ -1,11 +1,9 @@
 clc;
 
-global A m1 n1 No_Files_In_Class_Folder Class_Count Training_Set_Folder
-
 %Initialize DL parameters
-Image_Data_Matrix =[];
-K=3;
-noIt=2;
+% Image_Data_Matrix =[];
+% K=3;
+% noIt=2;
 
 Training_Set_Folder = '/home/thiago/dev/projects/dictionary-learning/FaceRecogToolv4/FaceDatabase/Database1/Train_Data';
 m1 = 6;
@@ -32,29 +30,29 @@ for k = 3:No_Folders_In_Training_Set_Folder
             Tmp_Image = test;
         end
         Tmp_Image_Down_Sampled = double(imresize(Tmp_Image,[m1 n1]));
-        Image_Data_Matrix(:,File_Count) = Tmp_Image_Down_Sampled(:);        
-%         Tmp_Image_Down_Sampled=double(Tmp_Image_Down_Sampled/255);
-%         X = sliding(Tmp_Image_Down_Sampled);
-%         lines = size(X,1);
-%         D_hat=initialize(lines,K,X);
-%         [S_hat Dict]=modDic(D_hat,X,noIt);
-%         Dict=Dict(:);
-%         Image_Data_Matrix =[Dict Image_Data_Matrix];
+        Image_Data_Matrix(:,File_Count) = Tmp_Image_Down_Sampled(:);
+        %         Tmp_Image_Down_Sampled=double(Tmp_Image_Down_Sampled/255);
+        %         X = sliding(Tmp_Image_Down_Sampled);
+        %         lines = size(X,1);
+        %         D_hat=initialize(lines,K,X);
+        %         [S_hat Dict]=modDic(D_hat,X,noIt);
+        %         Dict=Dict(:);
+        %         Image_Data_Matrix =[Dict Image_Data_Matrix];
         File_Count = File_Count+1;
-       end
-    Class_Count = Class_Count+1;
-    
+    end
+    Class_Count = Class_Count+1;    
 end
 A = Image_Data_Matrix;
-%imshow(full(Dict)); 
+%imshow(full(Dict));
 %A=normalizeColumns(Image_Data_Matrix);
 A = A/(diag(sqrt(diag(A'*A))));
 
 
+%% Test Case 01
+fprintf('[TestCase01] Starting...');
 Test_File = '03.pgm';
-Test_File_Path = '/home/thiago/dev/projects/dictionary-learning/FaceRecogToolv4/FaceDatabase/Database1/Test_Data/s13/';
+Test_File_Path = '/home/thiago/dev/projects/dictionary-learning/FaceRecogToolv4/FaceDatabase/Database1/Test_Data/s12/';
 test_image_path = [Test_File_Path Test_File];
-fprintf('Test Image: %s\n', test_image_path);
 Test_File = [Test_File_Path Test_File];
 test = imread(Test_File);
 if length(size(test))==3
@@ -65,17 +63,6 @@ end
 Test_Image_Down_Sampled = double(imresize(Test_Image,[m1 n1]));
 y = Test_Image_Down_Sampled(:);
 n = size(A,2);
-% fprintf('Processing .... /n')
-% set(handles.edit3,'String','Processing ... !')
-% drawnow;
-% cvx_quiet true
-% cvx_begin
-% variable x1(n)
-% minimize norm(x1,1)
-% subject to
-% A*x1 == y;
-% cvx_end
-% figure,plot(x1);
 f=ones(2*n,1);
 Aeq=[A -A];
 lb=zeros(2*n,1);
@@ -103,12 +90,14 @@ clss = find(tmp==min(tmp));
 cccc = dir([Training_Set_Folder]);
 Which_Folder = dir([Training_Set_Folder,'/',cccc(clss+2).name,'/']);
 Which_Image = randsample(3:length(Which_Folder),1);
-Image_Path = [Training_Set_Folder,cccc(clss+2).name,'/',Which_Folder(Which_Image).name];
+Image_Path = [Training_Set_Folder,'/',cccc(clss+2).name,'/',Which_Folder(Which_Image).name];
 Class_Image = (Image_Path);
-fprintf('Detected Image: %s\n', Class_Image);
+fprintf('[TestCase01] Testing Image : %s\n', test_image_path);
+fprintf('[TestCase01] Detected Image: %s\n', Class_Image);
+fprintf('[TestCase01] Done!');
 
-
-
+%% Test Case 02
+fprintf('[TestCase02] Starting...');
 IsTrue=0;
 TotImg=0;
 Testing_Set_Folder='/home/thiago/dev/projects/dictionary-learning/FaceRecogToolv4/FaceDatabase/Database1/Test_Data';
@@ -171,28 +160,26 @@ for k=1:length(TestFiles)
                 axes(handles.axes4);
                 imshow(Class_Image)
                 %                 title('Detected Image','Color','black','FontSize',25)
-
+                
                 set(handles.togglebutton3,'visible','on')
                 set(handles.togglebutton4,'visible','on');
                 set(handles.text3,'visible','on');
-
-                                while 1
-                                    pause(eps)
-                                    if get(handles.togglebutton3,'value')==1
-                                        IsTrue=IsTrue+1;
-                                        set(handles.togglebutton3,'value',0)
-                                        break;
-                                    elseif get(handles.togglebutton4,'value')==1
-                                        set(handles.togglebutton4,'value',0)
-                                        break;
-                                    end
-                                end
+                
+                while 1
+                    pause(eps)
+                    if get(handles.togglebutton3,'value')==1
+                        IsTrue=IsTrue+1;
+                        set(handles.togglebutton3,'value',0)
+                        break;
+                    elseif get(handles.togglebutton4,'value')==1
+                        set(handles.togglebutton4,'value',0)
+                        break;
+                    end
+                end
                 set(handles.togglebutton3,'visible','off')
                 set(handles.togglebutton4,'visible','off');
                 set(handles.text3,'visible','off');
                 axes(handles.axes4)
-                %                 cla
-
             end
         end
     end
@@ -204,3 +191,4 @@ set(handles.edit2,'String',[num2str(eta) '%']);
 drawnow;
 set(handles.togglebutton3,'visible','off')
 set(handles.togglebutton4,'visible','off');
+fprintf('[TestCase02] Done!');
