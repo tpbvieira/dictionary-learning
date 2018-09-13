@@ -49,7 +49,7 @@ A = A/(diag(sqrt(diag(A'*A))));
 
 
 %% Test Case 01
-fprintf('[TestCase01] Starting...');
+fprintf('[TestCase01] Starting...\n');
 Test_File = '03.pgm';
 Test_File_Path = '/home/thiago/dev/projects/dictionary-learning/FaceRecogToolv4/FaceDatabase/Database1/Test_Data/s12/';
 test_image_path = [Test_File_Path Test_File];
@@ -95,10 +95,10 @@ Class_Image = (Image_Path);
 Detected_Class = cccc(clss+2).name;
 fprintf('[TestCase01] Testing Image : %s\n', test_image_path);
 fprintf('[TestCase01] Detected Image: %s\n', Class_Image);
-fprintf('[TestCase01] Done!');
+fprintf('[TestCase01] Done!\n');
 
 %% Test Case 02
-fprintf('[TestCase02] Starting...');
+fprintf('\n[TestCase02] Starting...\n');
 IsTrue=0;
 TotImg=0;
 Testing_Set_Folder='/home/thiago/dev/projects/dictionary-learning/FaceRecogToolv4/FaceDatabase/Database1/Test_Data';
@@ -107,8 +107,8 @@ for k=1:length(TestFiles)
     if ~strcmp(TestFiles(k,1).name(1),'.')
         Imgfiles=dir([Testing_Set_Folder '/' TestFiles(k).name]);
         for m=1:length(Imgfiles)
-            if ~strcmp(Imgfiles(m,1).name(1),'.')
-                Test_File = [Testing_Set_Folder '/' TestFiles(k,1).name '/' Imgfiles(m,1).name];
+            if ~strcmp(Imgfiles(m,1).name(1),'.')                
+                Test_File = [Testing_Set_Folder '/' TestFiles(k,1).name '/' Imgfiles(m,1).name];                
                 test = imread(Test_File);
                 if length(size(test))==3
                     Test_Image = rgb2gray(test);
@@ -118,14 +118,6 @@ for k=1:length(TestFiles)
                 Test_Image_Down_Sampled = double(imresize(Test_Image,[m1 n1]));
                 y = Test_Image_Down_Sampled(:);
                 n = size(A,2);
-                %                 cvx_quiet true
-                %                 cvx_begin
-                %                 variable x1(n)
-                %                 minimize norm(x1,1)
-                %                 subject to
-                %                 A*x1 == y;
-                %                 cvx_end
-                % figure,plot(x1);
                 f=ones(2*n,1);
                 Aeq=[A -A];
                 lb=zeros(2*n,1);
@@ -151,47 +143,16 @@ for k=1:length(TestFiles)
                 TotImg=TotImg+1;
                 Sparse_Conc_Index(TotImg) = (k1*max(tmp1)-1)/(k1-1);
                 clss = find(tmp==min(tmp));
-                % figure,plot(tmp)
-                ssttrr = sprintf('The Test Image Corresponds to Class: %d',clss)
                 cccc = dir([Training_Set_Folder]);
-                Which_Folder = dir([Training_Set_Folder,cccc(clss+2).name,'/']);
+                Which_Folder = dir([Training_Set_Folder,'/',cccc(clss+2).name,'/']);
                 Which_Image = randsample(3:length(Which_Folder),1);
-                Image_Path = [Training_Set_Folder,cccc(clss+2).name,'/',Which_Folder(Which_Image).name];
+                Image_Path = [Training_Set_Folder,'/',cccc(clss+2).name,'/',Which_Folder(Which_Image).name];                
                 Class_Image = (Image_Path);
-                axes(handles.axes4);
-                imshow(Class_Image)
-                %                 title('Detected Image','Color','black','FontSize',25)
-                
-                set(handles.togglebutton3,'visible','on')
-                set(handles.togglebutton4,'visible','on');
-                set(handles.text3,'visible','on');
-                
-                while 1
-                    pause(eps)
-                    if get(handles.togglebutton3,'value')==1
-                        IsTrue=IsTrue+1;
-                        set(handles.togglebutton3,'value',0)
-                        break;
-                    elseif get(handles.togglebutton4,'value')==1
-                        set(handles.togglebutton4,'value',0)
-                        break;
-                    end
-                end
-                set(handles.togglebutton3,'visible','off')
-                set(handles.togglebutton4,'visible','off');
-                set(handles.text3,'visible','off');
-                axes(handles.axes4)
+                detectedClass = strcmp(TestFiles(k,1).name, cccc(clss+2).name);
+                detectedFile = strcmp(Imgfiles(m,1).name, Which_Folder(Which_Image).name);
+                fprintf('[TestCase02] Image %s.%d: %d/%d\n', TestFiles(k,1).name, m-2, detectedClass, detectedFile);
             end
         end
     end
 end
-
-
-eta = (IsTrue/TotImg)*100;
-set(handles.edit2,'visible','on');
-set(handles.text4,'visible','on');
-set(handles.edit2,'String',[num2str(eta) '%']);
-drawnow;
-set(handles.togglebutton3,'visible','off')
-set(handles.togglebutton4,'visible','off');
-fprintf('[TestCase02] Done!');
+fprintf('[TestCase02] Done!\n');
