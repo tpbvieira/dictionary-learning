@@ -5,7 +5,7 @@ clc;
 % K=3;
 % noIt=2;
 
-Training_Set_Folder = '/home/thiago/dev/projects/dictionary-learning/FaceRecogToolv4/FaceDatabase/Database1/Train_Data';
+Training_Set_Folder = 'FaceDatabase/Database1/Train_Data';
 m1 = 6;
 n1 = 3;
 TS_Vector = dir(Training_Set_Folder);
@@ -51,7 +51,7 @@ A = A/(diag(sqrt(diag(A'*A))));
 %% Test Case 01
 fprintf('[TestCase01] Starting...\n');
 Test_File = '03.pgm';
-Test_File_Path = '/home/thiago/dev/projects/dictionary-learning/FaceRecogToolv4/FaceDatabase/Database1/Test_Data/s12/';
+Test_File_Path = 'FaceDatabase/Database1/Test_Data/s12/';
 test_image_path = [Test_File_Path Test_File];
 Test_File = [Test_File_Path Test_File];
 test = imread(Test_File);
@@ -101,7 +101,7 @@ fprintf('[TestCase01] Done!\n');
 fprintf('\n[TestCase02] Starting...\n');
 IsTrue=0;
 TotImg=0;
-Testing_Set_Folder='/home/thiago/dev/projects/dictionary-learning/FaceRecogToolv4/FaceDatabase/Database1/Test_Data';
+Testing_Set_Folder='FaceDatabase/Database1/Test_Data';
 TestFiles = dir(Testing_Set_Folder);
 for k=1:length(TestFiles)
     if ~strcmp(TestFiles(k,1).name(1),'.')
