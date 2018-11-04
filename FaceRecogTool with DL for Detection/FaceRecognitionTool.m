@@ -21,7 +21,7 @@ function varargout = FaceRecognitionTool(varargin)
 
 % Edit the above text to modify the response to help FaceRecognitionTool
 
-% 
+%
 
 % Begin initialization code - DO NOT EDIT
 gui_Singleton = 1;
@@ -125,23 +125,22 @@ for k = 3:No_Folders_In_Training_Set_Folder
         end
         %Tmp_Image_Down_Sampled = double(imresize(Tmp_Image,[114 90]));
         %Image_Data_Matrix(:,File_Count) = Tmp_Image_Down_Sampled(:);
-         Tmp_Image_Down_Sampled=double(Tmp_Image);
-         X = sliding(double(Tmp_Image_Down_Sampled));
-         lines = size(X,1);
-         D_hat=initialize(lines,K,X);
-         [S_hat Dict]=modDic(D_hat,X,noIt);
-         Dict=Dict(:);
-         Image_Data_Matrix =[Dict Image_Data_Matrix];
-        File_Count = File_Count+1;
-       end
-    Class_Count = Class_Count+1;
-    
+        Tmp_Image_Down_Sampled=double(Tmp_Image);
+        X = sliding(double(Tmp_Image_Down_Sampled)); % não precisa converter novamente para double
+        lines = size(X,1);
+        D_hat = initialize(lines,K,X);
+        [S_hat Dict]=modDic(D_hat,X,noIt);
+        Dict=Dict(:);
+        Image_Data_Matrix = [Dict Image_Data_Matrix]; % esta concatenação me parece invertida, adicionando no início, não?
+        File_Count = File_Count+1; % esta variável existe apenas para definir a coluna do dicionário que deve ser atualizada. se não for usar, pode apagar. alias, é sempre bom manter o código livre de lixo, para facilitar o entendimento
+    end
+    Class_Count = Class_Count+1;    
 end
 close(h)
 A = Image_Data_Matrix;
 %A=struct2array(load('dictionaryII.mat'));
 %A=normalizeColumns(A);
-%imshow(full(Dict)); 
+%imshow(full(Dict));
 %A=normalizeColumns(Image_Data_Matrix);
 %A = A/(diag(sqrt(diag(A'*A))));
 
@@ -228,23 +227,22 @@ for k=1:length(TestFiles)
                 set(handles.togglebutton4,'visible','on');
                 set(handles.text3,'visible','on');
                 
-                                while 1
-                                    pause(eps)
-                                    if get(handles.togglebutton3,'value')==1
-                                        IsTrue=IsTrue+1;
-                                        set(handles.togglebutton3,'value',0)
-                                        break;
-                                    elseif get(handles.togglebutton4,'value')==1
-                                        set(handles.togglebutton4,'value',0)
-                                        break;
-                                    end
-                                end
+                while 1
+                    pause(eps)
+                    if get(handles.togglebutton3,'value')==1
+                        IsTrue=IsTrue+1;
+                        set(handles.togglebutton3,'value',0)
+                        break;
+                    elseif get(handles.togglebutton4,'value')==1
+                        set(handles.togglebutton4,'value',0)
+                        break;
+                    end
+                end
                 set(handles.togglebutton3,'visible','off')
                 set(handles.togglebutton4,'visible','off');
                 set(handles.text3,'visible','off');
                 axes(handles.axes4)
-                %  cla
-                
+                %  cla                
             end
         end
     end
@@ -256,6 +254,8 @@ set(handles.edit2,'String',[num2str(eta) '%']);
 drawnow;
 set(handles.togglebutton3,'visible','off')
 set(handles.togglebutton4,'visible','off');
+
+
 % --- Executes on button press in pushbutton6.
 function pushbutton6_Callback(hObject, eventdata, handles)
 % hObject    handle to pushbutton6 (see GCBO)
@@ -327,7 +327,7 @@ for i = 1:k1
     if i == 1
         delta_xi(1:nn(i)) = x1(1:nn(i));
     else
-        tmp_var = tmp_var + nn(i-1); 
+        tmp_var = tmp_var + nn(i-1);
         begs = nn(i-1)+1;
         ends = nn(i);
         delta_xi(begs:ends) = x1(begs:ends);
@@ -346,6 +346,7 @@ axes(handles.axes4);
 imshow(Class_Image)
 title('Detected Image','Color','black','FontSize',15)
 
+
 % --- Executes on button press in togglebutton3.
 function togglebutton3_Callback(hObject, eventdata, handles)
 % hObject    handle to togglebutton3 (see GCBO)
@@ -355,6 +356,7 @@ function togglebutton3_Callback(hObject, eventdata, handles)
 % Hint: get(hObject,'Value') returns toggle state of togglebutton3
 set(handles.togglebutton3,'value',1)
 
+
 % --- Executes on button press in togglebutton4.
 function togglebutton4_Callback(hObject, eventdata, handles)
 % hObject    handle to togglebutton4 (see GCBO)
@@ -363,6 +365,7 @@ function togglebutton4_Callback(hObject, eventdata, handles)
 
 % Hint: get(hObject,'Value') returns toggle state of togglebutton4
 set(handles.togglebutton4,'value',1);
+
 
 function edit1_Callback(hObject, eventdata, handles)
 
